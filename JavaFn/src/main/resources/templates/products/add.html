@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Product</title>
+</head>
+<body>
+<h2>Add Product</h2>
+<form th:action="@{/products/add}" th:object="${product}" method="post">
+    <label for="barcode">Barcode:</label>
+    <input type="text" id="barcode" name="barcode" th:field="*{barcode}" required><br>
+
+    <label for="productName">Product Name:</label>
+    <input type="text" id="productName" name="productName" th:field="*{productName}" required><br>
+
+    <label for="importPrice">Import Price:</label>
+    <input type="text" id="importPrice" name="importPrice" th:field="*{importPrice}" required><br>
+
+    <label for="retailPrice">Retail Price:</label>
+    <input type="text" id="retailPrice" name="retailPrice" th:field="*{retailPrice}" required><br>
+
+    <label for="category">Category:</label>
+    <input type="text" id="category" name="category" th:field="*{category}" required><br>
+
+    <label for="creationDate">Creation Date:</label>
+    <input type="date" id="creationDate" name="creationDate" th:field="${product.creationDate}" required>
+
+
+    <button type="submit">Add Product</button>
+</form>
+</body>
+</html>
