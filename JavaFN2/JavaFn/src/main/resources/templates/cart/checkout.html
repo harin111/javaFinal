@@ -1,0 +1,25 @@
+<!-- src/main/resources/templates/cart/checkout.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout</title>
+</head>
+<body>
+<h1>Checkout</h1>
+
+<form th:action="@{/cart/checkout/processCheckout}" method="post" th:object="${customerInfo}">
+    <label for="phoneNumber">Phone Number:</label>
+    <input type="text" id="phoneNumber" name="phoneNumber" th:field="*{phoneNumber}" required/><br>
+
+    <label for="fullName">Full Name:</label>
+    <input type="text" id="fullName" name="fullName" th:field="*{fullName}" required/><br>
+
+    <label for="address">Address:</label>
+    <input type="text" id="address" name="address" th:field="*{address}" required/><br>
+
+    <button type="submit">Complete Checkout</button>
+</form>
+
+</body>
+</html>
