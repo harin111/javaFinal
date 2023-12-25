@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Invoice</title>
+</head>
+<body>
+<h1>Invoice</h1>
+
+<p>Amount: $<span th:text="${totalAmount}"></span></p>
+
+<table>
+  <thead>
+  <tr>
+    <th>Product</th>
+    <th>Quantity</th>
+    <th>Price</th>
+    <th>Total</th>
+  </tr>
+  </thead>
+  <tbody>
+  <!-- Iterate over product details and display them -->
+  <tr th:each="entry : ${productDetails}">
+    <td th:text="${entry.key}"></td> <!-- Product Name -->
+    <td th:text="${entry.value.quantity}"></td> <!-- Quantity -->
+    <td th:text="${entry.value.price}"></td> <!-- Price per unit -->
+    <td th:text="${entry.value.total}"></td> <!-- Total price for the product -->
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>
