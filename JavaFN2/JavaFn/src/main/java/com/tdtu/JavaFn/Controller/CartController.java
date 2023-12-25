@@ -5,7 +5,9 @@ import com.itextpdf.styledxmlparser.jsoup.nodes.Document;
 import com.lowagie.text.pdf.BaseFont;
 import com.tdtu.JavaFn.Classes.CustomerInfo;
 import com.tdtu.JavaFn.Classes.Product;
+import com.tdtu.JavaFn.Classes.PurchaseDetails;
 import com.tdtu.JavaFn.Interface.ProductRepository;
+import com.tdtu.JavaFn.Interface.PurchaseDetailsRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,6 +30,9 @@ import java.util.*;
 public class CartController {
     @Autowired
     private SpringTemplateEngine thymeleafTemplateEngine;
+
+    @Autowired
+    private PurchaseDetailsRepository purchaseDetailsRepository;
     private final ProductRepository productRepository;
 
     public CartController(ProductRepository productRepository) {
@@ -39,12 +44,10 @@ public class CartController {
         // Retrieve cart items from the session
         List<Product> cart = (List<Product>) model.getAttribute("cart");
 
-        // If the cart is null, initialize it
         if (cart == null) {
             cart = new ArrayList<>();
         }
 
-        // Calculate overall total and add it to the model
         double overallTotal = calculateOverallTotal(cart);
         model.addAttribute("cart", cart);
         model.addAttribute("overallTotal", overallTotal);
@@ -55,19 +58,15 @@ public class CartController {
 
     @PostMapping("/cart/add")
     public String addToCart(@RequestParam("productId") int productId, Model model) {
-        // Retrieve the product from the product repository
         Optional<Product> optionalProduct = productRepository.findById(productId);
 
         if (optionalProduct.isPresent()) {
-            // Retrieve cart items from the session
             List<Product> cart = (List<Product>) model.getAttribute("cart");
 
-            // If the cart is null, initialize it
             if (cart == null) {
                 cart = new ArrayList<>();
             }
 
-            // Check if the product is already in the cart
             Product productToAdd = optionalProduct.get();
             boolean productExists = false;
             for (Product cartProduct : cart) {
@@ -79,13 +78,11 @@ public class CartController {
                 }
             }
 
-            // If the product is not in the cart, add it
             if (!productExists) {
                 productToAdd.setQuantity(1);
                 cart.add(productToAdd);
             }
 
-            // Update the cart in the session
             model.addAttribute("cart", cart);
         }
 
@@ -156,13 +153,25 @@ public class CartController {
 
         // Process the checkout and calculate totalAmount
         double totalAmount = calculateTotalAmount(cart, productDetails); // You need to implement this
-
-        // Render the Thymeleaf template
-        // Add totalAmount and productDetails to the model for Thymeleaf to use in the invoice template
+        savePurchaseDetails(cart);
         model.addAttribute("totalAmount", totalAmount);
         model.addAttribute("productDetails", productDetails);
 
         return "checkout/invoice";
+    }
+
+    private void savePurchaseDetails(List<Product> cart) {
+        Date purchaseDate = new Date();
+
+        for (Product product : cart) {
+            PurchaseDetails purchaseDetails = new PurchaseDetails();
+            purchaseDetails.setProduct(product);
+            purchaseDetails.setQuantity(product.getQuantity());
+            purchaseDetails.setTotalPrice(product.calculateTotalPrice());
+            purchaseDetails.setPurchaseDate(purchaseDate);
+
+            purchaseDetailsRepository.save(purchaseDetails);
+        }
     }
 
     private double calculateTotalAmount(List<Product> cart, Map<String, Object> productDetails) {
@@ -203,9 +212,9 @@ public class CartController {
             // Set the response content type
             response.setContentType("application/pdf");
 
-            File htmlFile = new File("file:///D:/Games/JavaFn/JavaFn/src/main/resources/templates/checkout/invoice.html");
+            File htmlFile = new File("checkout/invoice.html");
             Document doc = Jsoup.parse(htmlFile, "UTF-8");
-            try (OutputStream os = new FileOutputStream("file:///D:/Games/JavaFn/JavaFn/src/main/resources/templates/checkout/invoice.pdf"))
+            try (OutputStream os = new FileOutputStream("checkout/invoice.pdf"))
             {
                 ITextRenderer renderer1 = new ITextRenderer();
                 SharedContext context = renderer1.getSharedContext();

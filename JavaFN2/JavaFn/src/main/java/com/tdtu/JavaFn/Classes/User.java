@@ -18,6 +18,24 @@ public class User {
     private String password;
     private String token;
     private LocalDateTime tokenExpiryTime;
+    private boolean emailVerified;
+    private boolean passwordChanged;
+
+    public boolean isPasswordChanged() {
+        return passwordChanged;
+    }
+
+    public void setPasswordChanged(boolean passwordChanged) {
+        this.passwordChanged = passwordChanged;
+    }
+
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
 
     public String getToken() {
         return token;
@@ -44,6 +62,15 @@ public class User {
         this.email = email;
         this.username = username;
         this.password = password;
+    }
+
+    public User(String name, String email, String username, String password, String token, LocalDateTime tokenExpiryTime) {
+        this.name = name;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.token = token;
+        this.tokenExpiryTime = tokenExpiryTime;
     }
 
     @Override

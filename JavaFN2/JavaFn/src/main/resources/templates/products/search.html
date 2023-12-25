@@ -17,17 +17,21 @@
 <table>
     <thead>
     <tr>
-        <th>Product ID</th>
+        <th>BarCode</th>
         <th>Name</th>
         <th>Price</th>
+        <th>Category</th>
+        <th>Creation Date</th>
         <th>Action</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="product : ${products}">
-        <td th:text="${product.id}"></td>
+        <td th:text="${product.barcode}"></td>
         <td th:text="${product.productName}"></td>
         <td th:text="${product.retailPrice}"></td>
+        <td th:text="${product.category}"></td>
+        <td th:text="${product.creationDate}"></td>
         <td>
             <form th:action="@{/cart/add}" method="post">
                 <input type="hidden" name="productId" th:value="${product.id}" />

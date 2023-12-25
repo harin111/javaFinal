@@ -1,7 +1,10 @@
 package com.tdtu.JavaFn.Controller;
 
 import com.tdtu.JavaFn.Classes.Product;
+import com.tdtu.JavaFn.Classes.User;
 import com.tdtu.JavaFn.Interface.ProductRepository;
+import com.tdtu.JavaFn.Interface.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,34 +16,44 @@ import java.util.Optional;
 @Controller
 public class ProductController {
 
-    private final ProductRepository productRepository;
+    private UserService userService;
+    private ProductRepository productRepository;
 
-    public ProductController(ProductRepository productRepository) {
+    @Autowired
+    public ProductController(UserService userService, ProductRepository productRepository) {
+        this.userService = userService;
         this.productRepository = productRepository;
     }
 
-    @GetMapping("/products/search")
-    public String showProductSearchForm(@RequestParam(name = "query", required = false) String query, Model model) {
-        List<Product> searchResults;
-
-        if (query != null && !query.isEmpty()) {
-            searchResults = productRepository.findByProductNameContainingOrBarcode(query, query);
-        } else {
-            searchResults = (List<Product>) productRepository.findAll();
-        }
-
-        model.addAttribute("products", searchResults);
-        return "products/search";
-    }
-
-
     @GetMapping("/products")
-    public String viewProductList(Model model) {
-        List<Product> products;
-        products = (List<Product>) productRepository.findAll();
-        model.addAttribute("products", products);
+    public String showProductSearchForm(@RequestParam(name = "query", required = false) String query,
+                                        @RequestParam(name = "username", required = false) String username,
+                                        Model model) {
+        User user = userService.findByUsername(username);
+        if(user != null && !user.isPasswordChanged())
+        {
+            return "redirect:/change-password?username=" + username;
+        }
+        else if(user != null)
+        {
+            List<Product> searchResults;
 
-        return "products/list";
+            if (query != null && !query.isEmpty()) {
+                searchResults = productRepository.findByProductNameContainingOrBarcode(query, query);
+            } else {
+                searchResults = (List<Product>) productRepository.findAll();
+            }
+
+            model.addAttribute("products", searchResults);
+            return "products/search";
+        }
+        else {
+            List<Product> products;
+            products = (List<Product>) productRepository.findAll();
+            model.addAttribute("products", products);
+
+            return "products/list";
+        }
     }
 
     @GetMapping("/products/add")
