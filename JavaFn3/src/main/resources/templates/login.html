@@ -4,30 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <link rel="stylesheet" href="css/styleLogin.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
 </head>
 <body>
 
-<h2>Login</h2>
+
 
 <div th:if="${param.error}">
     <p style="color: red" th:text="${errorMessage}"></p>
 </div>
+<dif class="wrapper">
+    <form th:action="@{/products}" method="post">
+        <h1>Login</h1>
+        <div class="input-box">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required/>
+            <i class='bx bx-user' ></i>
+        </div>
 
-<form th:action="@{/products}" method="post">
-    <div>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required/>
-    </div>
+        <div class="input-box">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required/>
+            <i class='bx bx-lock'></i>
+        </div>
 
-    <div>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required/>
-    </div>
+        <div>
+            <button type="submit">Login</button>
+        </div>
 
-    <div>
-        <button type="submit">Login</button>
-    </div>
-</form>
-
+        <div>
+            <p>Don't have an account? <a href="#">Register</a></p>
+        </div>
+    </form>
+</dif>
 </body>
 </html>

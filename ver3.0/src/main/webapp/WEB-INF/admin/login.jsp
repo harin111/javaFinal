@@ -1,5 +1,6 @@
-<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
-<%@ page isELIgnored = "false"%>
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,18 +25,20 @@
             <form action = "login" method = "post" class="border rounded w-100 mb-5 mx-auto px-3 pt-3 bg-light">
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input value = "<c:out value="${requestScope.user}"/>"  id="username" name="user" type="text" class="form-control" placeholder="Username">
+                    <input  id="username" name="user" type="text" class="form-control" placeholder="Username">
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input value = "<c:out value="${requestScope.pass}"/>" id="password" name="pass" type="password" class="form-control" placeholder="Password">
+                    <input id="password" name="pass" type="password" class="form-control" placeholder="Password">
                 </div>
                 <div class="form-group">
                     <button class="btn btn-success px-5">Login</button>
                 </div>
                 <c:if test="${not empty sessionScope.error}">
                     <div class="form-group">
-                        <div class = "alert alert-danger"><c:out value = "${sessionScope.error}"/></div>
+                        <div class = "alert alert-danger">
+                        <c:out value="${sessionScope.error}"/>
+                        </div>
                     </div>
                 </c:if>
 
