@@ -1,0 +1,62 @@
+<!-- cart/view.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Shopping Cart</title>
+</head>
+<body>
+<h1>Shopping Cart</h1>
+
+<!-- Display success message if any -->
+<div th:if="${message}" class="success-message" th:text="${message}"></div>
+
+<!-- Display cart items -->
+<table>
+    <thead>
+    <tr>
+        <th>Product ID</th>
+        <th>Name</th>
+        <th>Barcode</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Total Price</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product, rowStat : ${cart}">
+        <td th:text="${product.id}"></td>
+        <td th:text="${product.productName}"></td>
+        <td th:text="${product.barcode}"></td>
+        <td th:text="${product.retailPrice}"></td>
+        <td>
+            <!-- Add an input field for quantity -->
+            <form th:action="@{/cart/updateQuantity}" method="post">
+                <input type="hidden" name="productId" th:value="${product.id}" />
+                <input type="number" name="quantity" th:value="${product.quantity}" />
+                <button type="submit">Update</button>
+            </form>
+        </td>
+        <td th:text="${product.calculateTotalPrice()}"></td>
+        <td>
+            <!-- Add a delete button for each item -->
+            <form th:action="@{/cart/delete}" method="post">
+                <input type="hidden" name="productId" th:value="${product.id}" />
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div>
+    <p>Total Price: <span th:text="${overallTotal}"></span></p>
+</div>
+
+<form th:action="@{/cart/checkout}" method="get">
+    <button type="submit">Proceed to Checkout</button>
+</form>
+
+</body>
+</html>

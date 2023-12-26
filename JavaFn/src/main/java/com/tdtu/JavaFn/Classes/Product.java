@@ -22,6 +22,7 @@ public class Product {
     private Double retailPrice;
 
     private String category;
+    private int quantity;
 
     public void setCreationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
@@ -47,14 +48,27 @@ public class Product {
     public Product() {
     }
 
-    public Product(int id, String barcode, String productName, Double importPrice, Double retailPrice, String category, LocalDate creationDate) {
+    public Product(int id, String barcode, String productName, Double importPrice, Double retailPrice, String category, int quantity, LocalDate creationDate) {
         this.id = id;
         this.barcode = barcode;
         this.productName = productName;
         this.importPrice = importPrice;
         this.retailPrice = retailPrice;
         this.category = category;
+        this.quantity = quantity;
         this.creationDate = creationDate;
+    }
+
+    public double calculateTotalPrice() {
+        return retailPrice * quantity;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public int getId() {
